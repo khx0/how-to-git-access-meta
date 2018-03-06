@@ -1,0 +1,243 @@
+\documentclass{article}
+\pagestyle{empty}
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{beramono}
+\usepackage{wasysym}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc} 
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\geometry{hmargin=3.5cm,vmargin={2cm, 1.8cm}}
+
+\usepackage{color}
+\definecolor{bluekeywords}{rgb}{0.13,0.13,1}
+\definecolor{greencomments}{rgb}{0,0.5,0}
+\definecolor{redstrings}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.9,0.9,0.9}
+\definecolor{nikoblue}{rgb}{0.0, 0.3, 0.8}
+
+\usepackage{lastpage}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+%\fancyhf{}
+\fancyhead{}
+\fancyfoot{}
+\fancyfoot[L]{\small \today }
+\fancyfoot[R]{\small{\thepage \ of \pageref{LastPage}}}
+
+\usepackage{listings}
+\lstset{language=[Sharp]C,
+showspaces=false,
+showtabs=false,
+breaklines=true,
+showstringspaces=false,
+breakatwhitespace=true,
+escapeinside={(*@}{@*)},
+commentstyle=\color{greencomments},
+keywordstyle=\color{bluekeywords}\bfseries,
+stringstyle=\color{nikoblue},
+basicstyle=\ttfamily\color{nikoblue},
+backgroundcolor = \color{grey}
+}
+
+\usepackage{xcolor}
+
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+
+
+\begin{document}
+
+\section*{Guide to git}
+\setcounter{section}{1}
+
+This is a quick introduction on how to use git for version control of a project on which you wish to collaborate with other users by using a remote repository on a remote server \footnote{Direct any comments and questions to: khx0@posteo.net}. Although one of git's main features is being a non centralized version control tool, it can be quite convenient to have a common remote server.
+This shall not be a guide for git itself. There exist too many out there which I do not wish to outcompete and which are far more comprehensive. This shall rather be a quick practical example on how to use git on your local infrastructure. Also be reminded that git is a version control tool and not a backup solution. If you have a remote server you basically can use this as a backup in case you accidentally lose your local working copy for any reason, but this is then a nice side effect and not what git is designed for originally.
+
+\subsection{Starting a new git managed project}
+In this quick guide we assume that you are \verb|userA|
+and plan to work on a project together with \verb|userB|. Let's say your started a project on your local machine and stored it in a folder \verb|myproject|. Initially you only have a \verb|README.txt| file in your project folder and wish to start using git for version control.
+To do so go in the directory \verb|myproject| and initiate a git repository for this project by typing
+\begin{lstlisting}
+$git init
+\end{lstlisting}
+Calling \verb|$git status| will show you that the \verb|README.txt| file is still untracked.
+To start tracking this file and to commit this change do the following steps:
+\begin{lstlisting}
+$git add README.txt
+$git commit -m "initial commit, added README.txt"
+\end{lstlisting}
+Now you have successfully created a git repository on your local machine and issued the first commit to your project. For many projects one wishes to ignore certain file types, sometimes this are \verb|*.txt| or \verb|*.dat| output files. But a README.txt file is often an exception which one still wishes to track. For this purpose one sets up a corresponding \verb|.gitignore| file.
+In your local project directory do the following
+\begin{lstlisting}
+$touch .gitignore
+\end{lstlisting}
+and then open the \verb|.gitignore| file with an editor of your choice and put the following lines in there:
+\begin{lstlisting}
+*.txt
+!README.txt
+\end{lstlisting}
+These instructions tell the git repository to ignore any \verb|*.txt| files except for the \verb|README.txt| file. The \verb|.gitignore| file itself should of course also be tracked.
+Hence call
+\begin{lstlisting}
+$git add .gitignore
+$git commit -m "added .gitignore"
+\end{lstlisting}
+
+\subsection{Adding a remote}
+Now that we have our project that is managed by git on our local machine we wish to add a remote server, to enable remote synchronisation.
+Go to the directory that contains the \verb|myproject| folder and make a bare clone of your local git managed project.
+\begin{lstlisting}
+$git clone --bare myproject myproject.git
+\end{lstlisting}
+This creates a bare clone of your project with the name \verb|myproject.git| in your current working directory. Now we need to get this bare clone on the remote server. We now use secure copy to get the bare clone on the remote machine. For this purpose 
+To collaborate with another user| on this project you need to make sure to give all people the corresponding access rights to this directory. You might only want to give some users read access, but for equal contributors you most likely want to to give read and write access.
+Now we copy the bare clone of our repository to this path.
+\begin{lstlisting}
+$scp -r myproject.git
+	MYUSERNAME@REMOTESERVER:
+	/path/to/remote/repository/myProject.git
+\end{lstlisting}
+Now this path contains our bare clone \verb|myproject.git|.
+Now you can delete the local copy of myproject.git (but not the myproject folder itself of course).
+Next go back to the project directory of your local project \verb|myproject|.
+To connect our local repository with the remote server we need to add a remote. To do so type
+\begin{lstlisting}
+$git remote add origin
+	MYUSERNAME@SERVERNAME:
+	/path/to/remote/repository/myproject.git
+$git push origin master
+\end{lstlisting}
+Now our local working copy is tracking the remote repository on the remote server.
+You are ready to go and work using the regular git workflow.
+Before you start working on the project again, you should fetch the latest changes from the remote and see if something has changed. Once you have finished a part of your project commit your latest changes and push them to the remote.
+
+\noindent
+To check what the remotes of your current git managed project are type:
+\begin{lstlisting}
+$git remote -v
+\end{lstlisting}
+
+\subsection{Join an existing git project}
+If you find yourself in the role of \verb|userB| and wish to join an existing git project that some \verb|userA| has already set up on a remote server, follow the steps below.
+First you need to know the name of the project, where on the remote server it is stored and to make sure that you have the necessary access rights for the remote project directory on the remote machine.
+If any of those things do not work yet, go and talk to \verb|userA|.
+For the sake of simplicity let's say \verb|userA| has setup the \verb|myproject.git| on the server as described above, we describe how you can join the project.
+\noindent
+First you need to get a local working copy of the project. To do so type
+\begin{lstlisting}
+$git clone user_B@SERVERNAME:
+	/path/to/remote/repository/myproject.git
+	~/local/path/to/working/copy/myproject/
+\end{lstlisting}
+This creates a local copy of the repository in the path you specified on your local machine.
+Now you can start working on the project locally and follow the usual git workflow.
+Before you do so, you should fetch the latest changes from the remote server and after you have finished a
+part of your project you should push your latest commit to the remote as usual.
+
+
+\section{Basic git workflow}
+
+\begin{itemize}
+
+\item Assume you modify a tracked file, which has already been staged to the staging area before. To show the differences between both versions use the command
+\begin{lstlisting}
+$git diff <filename>
+\end{lstlisting}
+
+\item To view a history of all commits made to a project type
+\begin{lstlisting}
+$git log
+\end{lstlisting}
+
+\item Show the HEAD commit
+\begin{lstlisting}
+$git show HEAD
+\end{lstlisting}
+
+\item When working with a remote repository you should always check first, if your local repository is up to date.
+You can do this by calling
+\begin{lstlisting}
+$git fetch
+\end{lstlisting}
+This will not yet merge the remote repository in your local master branch. If you agree with the changes made, you can thereafter merge them by using
+\begin{lstlisting}
+$git merge origin/master
+\end{lstlisting}
+
+\end{itemize}
+
+\section{Backtracking with git}
+To undo changes made to your project, here are some of the relevant git commands to do so.
+\begin{itemize}
+
+\item
+\begin{lstlisting}
+$git checkout HEAD <filename>
+\end{lstlisting} --- discards changes in the working directory
+
+\item 
+\begin{lstlisting}
+$git reset HEAD <filename>
+\end{lstlisting}
+--- unstages file changes in the staging area
+
+\item 
+\begin{lstlisting}
+$git reset SHA
+\end{lstlisting}
+ --- can be used to reset the HEAD (pointer) to a previous commit in your commit history, where SHA are the first 7 characters of the SHA ID of the corresponding commit.
+\end{itemize}
+
+
+\section{Branching}
+
+To find out which branch you are currently on, type
+\begin{lstlisting}
+$git branch
+\end{lstlisting}
+You create a new branch by using
+\begin{lstlisting}
+$git branch <NewBranchName>
+\end{lstlisting}
+but still remain on the branch that you were on before. In order to switch to the new branch do
+\begin{lstlisting}
+$git checkout <NewBranchName>
+\end{lstlisting}
+At any time you can of course check which branch you are on by \verb|$git branch| The \verb|*| asteriks symbol indicates the active branch.
+Being on your desired branch you can keep working using your standard git workflow.
+If you are done working on a given branch and have merged all your desired results back to master you can delete a branch by invoking
+\begin{lstlisting}
+$git branch -d <NewBranchName>
+\end{lstlisting}
+
+\section{Cloning from your own GitHub repository}
+This tells you how to clone an existing repository from your GitHub account,
+\textit{i.e.} assuming that the repository already exists on GitHub.
+If so, do the following steps:
+
+\begin{enumerate}
+
+	\item Go to the GitHub page of the corresponding repopsitory and click on \verb|Clone or download|.
+	
+	\item In the clone with HTTPs section, click the icon to copy the clone URL for the repository, or directly copy the https address. 
+	
+	\item Then open a Terminal on your local machine and execute the command
+\begin{lstlisting}
+$git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
+\end{lstlisting}
+	where the the \verb| https://github.com/YOUR-USERNAME/YOUR-REPOSITORY|
+	argument should be pasted from the previous step.
+
+\end{enumerate}
+
+\end{document}
+
+
+
