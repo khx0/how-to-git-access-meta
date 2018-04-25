@@ -237,6 +237,32 @@ $git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
 
 \end{enumerate}
 
+\section{Connetcting a local git repo to your bitbucket account}
+Assume that you have a local repository and wish to connect it to your bitbucket account.
+First create an empty new repository in your bitbucket account and name it accordingly.
+Then use the terminal to connect your local repo to your new empty bitbucket repository.
+For this do the following steps:
+
+\begin{enumerate}
+	
+	\item Open a terminal and change to the directory of your local repository.
+\begin{lstlisting}
+$cd /path/to/your/repo
+\end{lstlisting}
+	
+	\item Next add the remote repository from your bitbucket account.
+\begin{lstlisting}
+$git remote add origin https://USER@bitbucket.org/USER/yourRepoName.git
+\end{lstlisting}
+	Here \verb|USER| is your bitbucket account user name.
+	
+	\item Then in a last step push your local repo to the remote.
+\begin{lstlisting}
+$git push -u origin master
+\end{lstlisting}
+	
+\end{enumerate}
+
 \end{document}
 
 
