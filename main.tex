@@ -171,6 +171,14 @@ This will not yet merge the remote repository in your local master branch. If yo
 $git merge origin/master
 \end{lstlisting}
 
+\item Very often I accidently add a file to the staging area, which I forgot to ignore by updating the \verb|.gitignore| file.
+To remove such files from the staging area but keeping them locally in my directory (\textit{i.e.} they simply won't be tracked by this repository), you can use the following command
+\begin{lstlisting}
+$git rm --cached <filePath>
+\end{lstlisting}
+to stage the removal of the file(s). This is not the same as unstaging a file. This is staging the removal of the file(s), whilst leaving the file untracked in your local working tree. Make sure you (also semantically) understand the difference
+between this removal and file unstaging.
+
 \end{itemize}
 
 \section{Backtracking with git}
