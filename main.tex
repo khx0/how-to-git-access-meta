@@ -271,6 +271,21 @@ $git push -u origin master
 	
 \end{enumerate}
 
+
+\section{Git's diff tools}
+
+\subsection{Show the difference between the HEAD and the previous commit of a single file}
+Sometimes I wish to inspect the difference of a single file between the most current commit (\verb|HEAD|)
+and for example the version in the commit previous to that (\verb|HEAD^|). This can be done in the following way.
+\begin{lstlisting}
+$git diff HEAD^ HEAD <my-file>
+\end{lstlisting}
+In this command \verb|HEAD^| is used to reference the second most recent commit (one commit behin the current HEAD).
+Similar you can use \verb|HEAD^^| to refer to two commits back, \textit{i.e.}
+\begin{lstlisting}
+$git diff HEAD^^ HEAD <my-file>
+\end{lstlisting}
+
 \end{document}
 
 
