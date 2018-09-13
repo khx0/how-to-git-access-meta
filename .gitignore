@@ -1,3 +1,6 @@
+# last revision 2018-03-06
+# khx0@posteo.net
+
 # LaTeX files
 *.aux
 *.glo
@@ -27,10 +30,11 @@
 *.out
 *.synctex.gz
 *.pdf
-!main.pdf
 *.xwm
 *.bib.bak
 *.bib.sav
+
+# !main.pdf uncomment if you wish to actually also track the pdf (manual naming)
 
 # Mac IDE files
 *.swp
