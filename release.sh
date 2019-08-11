@@ -2,7 +2,7 @@
 # author: Nikolas Schnellbaecher
 # contact: khx0@posteo.net
 # build and release local TeX document from source with timestamp
-# date: 2018-09-13
+# date: 2019-08-11
 ##########################################################################################
 
 # tex sheet
@@ -20,4 +20,3 @@ outname="Guide-to-git_$(date +%Y-%m-%d).pdf"
 echo $outname
 
 mv main.pdf $outname
-

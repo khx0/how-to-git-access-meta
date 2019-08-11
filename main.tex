@@ -179,6 +179,13 @@ $git rm --cached <filePath>
 to stage the removal of the file(s). This is not the same as unstaging a file. This is staging the removal of the file(s), whilst leaving the file untracked in your local working tree. Make sure you (also semantically) understand the difference
 between this removal and file unstaging.
 
+\item Changing a commit message, right after commiting.
+If you wish to change a commit message right after you commited, proceed as follows. Go to the directory of your git managed repository and type
+\begin{lstlisting}
+$git commit --amend
+\end{lstlisting}
+This will open an editor, containing your previous commit message which can now be edited and saved as new commit message for the very same commit.
+
 \end{itemize}
 
 \section{Backtracking with git}
